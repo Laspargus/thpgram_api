@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   devise_for :users,
   path: '',
   path_names: {
@@ -10,11 +11,18 @@ Rails.application.routes.draw do
     sessions: 'sessions',
     registrations: 'registrations'
   }
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  resources :images
-  resources :users, only: [:show, :index]
-  resources :profile, only: [:show]
   
- 
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      get '/profile', to: "profile#show"
+      get '/profile/my_images', to: "profile#my_images"
+      get '/profile/my_comments', to: "profile#my_comments"
+      resources :images do
+        resources :comments
+      end
+    end
+  end
+  
+
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
